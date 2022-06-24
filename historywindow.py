@@ -1,4 +1,4 @@
-historywindowfrom PySide6.QtWidgets import QApplication, QTreeView
+from PySide6.QtWidgets import QApplication, QTreeView
 
 from PySide6.QtCore import Signal, QAbstractTableModel, QModelIndex, Qt, QUrl
 
