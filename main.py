@@ -139,22 +139,26 @@ class MakeApp:
             displayHelp()
         
         try:
-            data['weburl'] = sys_args[1]
-        except IndexError:
-            displayHelp()
-        
-        try:
-            data['title'] = ' '.join(sys_args[2:])
-        except IndexError:
-            displayHelp()
-        
-        try:
             if ('-s' in sys_args) or ('--source' in sys_args):
                 data['source'] = True 
             else:
                 data['source'] = False
         except:
             pass
+        
+        try:
+            data['weburl'] = sys_args[1]
+        except IndexError:
+            displayHelp()
+        
+        try:
+            data['title'] = ""
+            for arg in sys_args[2:]:
+                if not(arg in ('help', 'h', '-h', '--help', '-s', '--source')):
+                    data['title'] += f"{arg} "
+        except IndexError:
+            displayHelp()
+        
         
         self._args = data
             
@@ -194,9 +198,16 @@ if __name__ == '__main__':
         self.processArgs()
         self.buildSourceCode()
         
+        filename = ""
+        if len(str(self._args["title"]).split(' ')) > 1:
+            filename = str(self._args["title"]).strip()  + '.py'
+        else:
+            filename = '_'.join(str(self._args["title"]).split(' ')).strip() + '.py'
+        
+        
         source_code_file: str = os.path.join(
             os.getcwd(),
-            '_'.join(str(self._args["title"]).split(' ')) + '.py'
+            filename
         )
         
         self.blue(f'Using filename: {source_code_file}')
@@ -215,6 +226,9 @@ if __name__ == '__main__':
         except:
             self.red(f'Unable to create the file with source code at {source_code_file}')
 
+        if self._args['source']:
+            print(colored(text="Good Bye!", color='magenta'))
+            sys.exit(0)
 
 if __name__ == "__main__":
     obj = MakeApp()
