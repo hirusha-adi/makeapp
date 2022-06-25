@@ -2,6 +2,7 @@ import sys, os
 from termcolor import colored
 
 def displayHelp():
+    print(colored(text="Good Bye!", color='blue'))
     sys.exit(0)
 
 
@@ -149,10 +150,15 @@ if __name__ == '__main__':
             os.getcwd(),
             '_'.join(str(self._args["title"]).split(' ')) + '.py'
         )
+
+        if os.path.isfile(source_code_file):
+            os.remove(source_code_file)
+            
         with open(source_code_file, "w", encoding="utf-8") as _make_file:
             _make_file.write(self._src_code)
 
         self.green('Created the source code file')
+
 
 if __name__ == "__main__":
     obj = MakeApp()
