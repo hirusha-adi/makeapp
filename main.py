@@ -38,7 +38,7 @@ class MakeApp:
             
         return data
 
-    def buildSourceCode(self):
+    def buildSourceCode(self) -> str:
         self._src_code = f"""import sys
 
 from PySide6.QtCore import QUrl
@@ -65,4 +65,5 @@ def startGUI():
 
 if __name__ == '__main__':
     startGUI()""" 
-    
+
+        return self._src_code
