@@ -12,11 +12,11 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle('')
+        self.setWindowTitle('Scammer.info')
 
         self.webEngineView = QWebEngineView()
         self.setCentralWidget(self.webEngineView)
-        initialUrl = 'http://qt.io'
+        initialUrl = 'http://scammer.info'
         self.webEngineView.load(QUrl(initialUrl))
         self.webEngineView.page().titleChanged.connect(self.setWindowTitle)
         self.webEngineView.page().urlChanged.connect(self.urlChanged)
