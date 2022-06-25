@@ -1,4 +1,5 @@
-import sys
+import sys, os
+from termcolor import colored
 
 def displayHelp():
     sys.exit(0)
@@ -9,6 +10,78 @@ class MakeApp:
         self._args: dict = {}
         self._src_code: str = ""
     
+    def green(self, text: str):
+        print(
+            colored(
+                text="[", 
+                color='green'
+            ),
+            end=""
+        )
+        print("+", end="")
+        print(
+            colored(
+                text="]", 
+                color='green'
+            ),
+            end=""
+        )
+        print(
+            colored(
+                text=" " + text, 
+                color='green'
+            ),
+            end="\n"
+        )
+    
+    def red(self, text: str):
+        print(
+            colored(
+                text="[", 
+                color='red'
+            ),
+            end=""
+        )
+        print("!!", end="")
+        print(
+            colored(
+                text="]", 
+                color='red'
+            ),
+            end=""
+        )
+        print(
+            colored(
+                text=" " + text, 
+                color='red'
+            ),
+            end="\n"
+        )
+    
+    def yellow(self, text: str):
+        print(
+            colored(
+                text="[", 
+                color='yellow'
+            ),
+            end=""
+        )
+        print("*", end="")
+        print(
+            colored(
+                text="]", 
+                color='yellow'
+            ),
+            end=""
+        )
+        print(
+            colored(
+                text=" " + text, 
+                color='yellow'
+            ),
+            end="\n"
+        )
+
     def processArgs(self) -> dict:
         sys_args = sys.argv[:]
         data = {}
@@ -67,3 +140,20 @@ if __name__ == '__main__':
     startGUI()""" 
 
         return self._src_code
+
+    def run(self) -> None:
+        self.processArgs()
+        self.buildSourceCode()
+    
+        source_code_file: str = os.path.join(
+            os.getcwd(),
+            '_'.join(str(self._args["title"]).split(' ')) + '.py'
+        )
+        with open(source_code_file, "w", encoding="utf-8") as _make_file:
+            _make_file.write(self._src_code)
+
+        self.green('Created the source code file')
+
+if __name__ == "__main__":
+    obj = MakeApp()
+    obj.run()
