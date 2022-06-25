@@ -1,17 +1,37 @@
 import sys
 
 def displayHelp():
-    pass
+    sys.exit(0)
 
 def processArgs():
     args = sys.argv[:]
     data = {}
+    
+    if ('h' in args) or ('help' in args) or ('-h' in args) or ('--help' in args):
+        displayHelp()
+    
     try:
-        weburl = args[1]
+        data['weburl'] = args[1]
     except IndexError:
         displayHelp()
-    title = ' '.join(args[2:])
-    print(weburl)
-    print(title)
+    
+    try:
+        data['title'] = ' '.join(args[2:])
+    except IndexError:
+        displayHelp()
+    
+    try:
+        if ('-s' in args) or ('--source' in args):
+            data['source'] = True 
+        else:
+            data['source'] = False
+    except:
+        pass
+    
+    print(data)
+        
+    return data
 
 processArgs()
+
+
