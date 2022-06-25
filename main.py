@@ -159,7 +159,6 @@ class MakeApp:
         except IndexError:
             displayHelp()
         
-        
         self._args = data
             
         return data
@@ -204,7 +203,6 @@ if __name__ == '__main__':
         else:
             filename = '_'.join(str(self._args["title"]).split(' ')).strip() + '.py'
         
-        
         source_code_file: str = os.path.join(
             os.getcwd(),
             filename
@@ -229,6 +227,19 @@ if __name__ == '__main__':
         if self._args['source']:
             print(colored(text="Good Bye!", color='magenta'))
             sys.exit(0)
+        
+        try:
+            from PySide6.QtCore import QUrl
+            from PySide6.QtWebEngineWidgets import QWebEngineView
+            from PySide6.QtWidgets import QApplication, QMainWindow
+            self.green('Dependencies are installed!')
+        except:
+            self.blue('Installing required dependencies to coompile')
+            os.system('py -m pip install PySide6 -U' if os.name == 'nt' else 'python3 -m pip install PySide6 -U')
+            self.green('Installed dependencies')
+        
+            
+            
 
 if __name__ == "__main__":
     obj = MakeApp()
