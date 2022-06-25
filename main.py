@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, shutil
 from termcolor import colored
 
 def displayHelp():
@@ -203,10 +203,8 @@ if __name__ == '__main__':
         else:
             filename = '_'.join(str(self._args["title"]).split(' ')).strip() + '.py'
         
-        source_code_file: str = os.path.join(
-            os.getcwd(),
-            filename
-        )
+        base_path = os.getcwd()
+        source_code_file = os.path.join(base_path, filename)
         
         self.blue(f'Using filename: {source_code_file}')
 
@@ -228,6 +226,7 @@ if __name__ == '__main__':
             print(colored(text="Good Bye!", color='magenta'))
             sys.exit(0)
         
+        self.blue('Checking for dependencies')
         try:
             from PySide6.QtCore import QUrl
             from PySide6.QtWebEngineWidgets import QWebEngineView
@@ -235,11 +234,28 @@ if __name__ == '__main__':
             self.green('Dependencies are installed!')
         except:
             self.blue('Installing required dependencies to coompile')
-            os.system('py -m pip install PySide6 -U' if os.name == 'nt' else 'python3 -m pip install PySide6 -U')
+            os.system('py -m pip install PySide6 PyInstaller -U' if os.name == 'nt' else 'python3 -m pip install PySide6 PyInstaller -U')
             self.green('Installed dependencies')
         
-            
-            
+        
+        compile_folder = os.path.join(base_path, 'compile')
+        self.blue(f'Using folder: {compile_folder} to compile')
+        if not(os.path.isdir(compile_folder)):
+            os.makedirs(compile_folder)
+            self.green('Created folder')
+        dst = os.path.join(compile_folder, filename)
+        if os.path.isfile(dst):    
+            os.remove(dst)
+            self.green(f'Removed existing file at {source_code_file}')
+        shutil.copy(src=source_code_file, dst=dst)
+        self.green(f'Copied file from {source_code_file} to {dst}')
+        os.chdir(compile_folder)
+        self.green(f"Changed current working directory to {compile_folder}")
+        self.blue(f'Starting to compile {filename} with filename of "{filename[:-3]}"')
+        command = "py -m " if os.name == 'nt' else 'python3 -m '
+        command += 'PyInstaller '
+        
+        
 
 if __name__ == "__main__":
     obj = MakeApp()
