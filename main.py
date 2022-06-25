@@ -2,7 +2,7 @@ import sys, os
 from termcolor import colored
 
 def displayHelp():
-    print(colored(text="Good Bye!", color='blue'))
+    print(colored(text="Good Bye!", color='magenta'))
     sys.exit(0)
 
 
@@ -82,6 +82,54 @@ class MakeApp:
             ),
             end="\n"
         )
+    
+    def blue(self, text: str):
+        print(
+            colored(
+                text="[", 
+                color='cyan'
+            ),
+            end=""
+        )
+        print("-", end="")
+        print(
+            colored(
+                text="]", 
+                color='cyan'
+            ),
+            end=""
+        )
+        print(
+            colored(
+                text=" " + text, 
+                color='cyan'
+            ),
+            end="\n"
+        )
+    
+    def magenta(self, text: str):
+        print(
+            colored(
+                text="[", 
+                color='magenta'
+            ),
+            end=""
+        )
+        print("-", end="")
+        print(
+            colored(
+                text="]", 
+                color='magenta'
+            ),
+            end=""
+        )
+        print(
+            colored(
+                text=" " + text, 
+                color='magenta'
+            ),
+            end="\n"
+        )
 
     def processArgs(self) -> dict:
         sys_args = sys.argv[:]
@@ -145,21 +193,30 @@ if __name__ == '__main__':
     def run(self) -> None:
         self.processArgs()
         self.buildSourceCode()
-    
+        
         source_code_file: str = os.path.join(
             os.getcwd(),
             '_'.join(str(self._args["title"]).split(' ')) + '.py'
         )
+        
+        self.blue(f'Using filename: {source_code_file}')
 
-        if os.path.isfile(source_code_file):
-            os.remove(source_code_file)
-            
-        with open(source_code_file, "w", encoding="utf-8") as _make_file:
-            _make_file.write(self._src_code)
-
-        self.green('Created the source code file')
+        try:
+            if os.path.isfile(source_code_file):
+                os.remove(source_code_file)
+                self.green(f'Removed existing file at {source_code_file}')
+        except:
+            self.red(f'Unable to remove the existing file {source_code_file}')
+        
+        try:
+            with open(source_code_file, "w", encoding="utf-8") as _make_file:
+                _make_file.write(self._src_code)
+                self.green(f'Created the file with source code at {source_code_file}')
+        except:
+            self.red(f'Unable to create the file with source code at {source_code_file}')
 
 
 if __name__ == "__main__":
     obj = MakeApp()
     obj.run()
+    
