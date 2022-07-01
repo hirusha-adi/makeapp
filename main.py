@@ -232,17 +232,27 @@ if __name__ == '__main__':
             print(colored(text="Good Bye!", color='magenta'))
             sys.exit(0)
 
-        self.blue('Checking for dependencies')
+        self.blue('Checking for PySide6')
         try:
             from PySide6.QtCore import QUrl
             from PySide6.QtWebEngineWidgets import QWebEngineView
             from PySide6.QtWidgets import QApplication, QMainWindow
-            self.green('Dependencies are installed!')
+            self.green('PySide6 is installed!')
         except:
-            self.blue('Installing required dependencies to coompile')
-            os.system('py -m pip install PySide6 PyInstaller -U' if os.name ==
-                      'nt' else 'python3 -m pip install PySide6 PyInstaller -U')
-            self.green('Installed dependencies')
+            self.blue('Installing PySide6')
+            os.system('py -m pip install PySide6 -U' if os.name ==
+                      'nt' else 'python3 -m pip install PySide6 -U')
+            self.green('Installed PySide6')
+
+        self.blue('Checking for PyInstaller')
+        try:
+            import PyInstaller
+            self.green('PyInstaller is installed!')
+        except:
+            self.blue('Not found. Installing PyInstaller')
+            os.system('py -m pip install PyInstaller -U' if os.name ==
+                      'nt' else 'python3 -m pip install PyInstaller -U')
+            self.green('Installed PyInstaller')
 
         compile_folder = os.path.join(base_path, 'compile')
         self.blue(f'Using folder: {compile_folder} to compile')
@@ -255,13 +265,52 @@ if __name__ == '__main__':
             self.green(f'Removed existing file at {source_code_file}')
         shutil.copy(src=source_code_file, dst=dst)
         self.green(f'Copied file from {source_code_file} to {dst}')
+        if self._args['source'] is False:
+            os.remove(source_code_file)
+            self.green(f'Removed {source_code_file}')
         os.chdir(compile_folder)
         self.green(f"Changed current working directory to {compile_folder}")
         self.blue(
             f'Starting to compile {filename} with filename of "{filename[:-3]}"')
         command = "py -m " if os.name == 'nt' else 'python3 -m '
         command += 'PyInstaller '
-        command += ''
+        command += f'"./{filename}" '
+        command += f'--name "{filename[:-3]}" '
+        command += f'--onefile '
+        command += f'--noconfirm'
+        self.blue(f'Running: "{command}"')
+        # os.system(command)
+        self.green('Created the binary')
+        self.blue('Removing unwanted files...')
+        try:
+            temp = os.path.join(compile_folder, f'{filename[:-3]}.spec')
+            os.remove(temp)
+            self.green(f'Removed: {temp}')
+        except Exception as e:
+            self.red(str(e))
+        try:
+            temp = os.path.join(compile_folder, f'build')
+            shutil.rmtree(temp)
+            self.green(f'Removed: {temp}')
+        except Exception as e:
+            self.red(str(e))
+        try:
+            os.remove(dst)
+            self.green(f'Removed: {dst}')
+        except Exception as e:
+            self.red(str(e))
+        dist_folder = os.path.join(compile_folder, 'dist')
+        compiled_file = os.path.join(dist_folder, filename[:-3])
+        final_compiled_copy_path = os.path.join(base_path, filename[:-3])
+        shutil.copy(src=compiled_file, dst=final_compiled_copy_path)
+        self.green(f"Changed current working directory to {base_path}")
+        os.chdir(base_path)
+        try:
+            shutil.rmtree(compile_folder)
+        except Exception as e:
+            self.red(str(e))
+        self.magenta(f'Completed Compiling: {filename}\nGood Bye!')
+        sys.exit(0)
 
 
 if __name__ == "__main__":
