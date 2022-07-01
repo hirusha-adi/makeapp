@@ -5,7 +5,27 @@ from termcolor import colored
 
 
 def displayHelp():
-    print(colored(text="Good Bye!", color='magenta'))
+    print("""python3 makeapp <url> <name> *[args]
+
+Paramaters:
+    <url>:
+        The direct URL to the website that you want to wrap.
+        examples:
+            "https://google.com"
+            "https://kernel.org"
+        
+    <name>:
+        The name of the application. The title of the window.
+        examples:
+            "Google"
+            "The Linux Kernel Archives"
+    
+    *[args]:
+        -h, --help:
+            show help and quit
+        
+        -s. --source:
+            make both the binary and the source code""")
     sys.exit(0)
 
 
